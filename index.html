@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script src="GameOfLifeGrid.js"></script>
+<script>
+    
+    const canvas = document.getElementById("canvas")
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+        ctx.drawImage(img, 0, 0);
+        const pixel = ctx.getImageData(0, 0, img.width, img.height);
+        const data = pixel.data;
+        console.log("ORIGINAL DATA");
+        console.log(data);
+        const newdata = [];
+        for(var i = 0; i < data.length; i+=4){
+            if(data[i] + data[i+1] + data[i+2] > 50){
+                newdata.push(1);
+            } else{
+                newdata.push(0);
+            }
+        }
+        console.log("NEWDATA");
+        console.log(newdata);
+        ctx.fillStyle="black";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "white";
+        for(var i = 0; i < newdata.length; i++){
+            if (newdata[i] == 1){
+                var y = Math.floor(i/canvas.width);
+                var x = i % canvas.width;
+                ctx.fillRect(x,y,1,1);
+            }
+        }
+        startGame(newdata);
+
+    };
+    img.src = "Algae-GOL-edited-2.jpg";
+    canvas.width = 433;
+    canvas.height = 433;
+
+
+        // number of updates per second
+        FPS = 1;
+
+        // width of the grid
+        WIDTH = canvas.width;
+
+        // height of the grid
+        HEIGHT = canvas.height;
+
+        startGame = function(data){
+
+            game = new GameOfLifeGrid(WIDTH,HEIGHT);
+
+            
+            for(var i = 0; i < data.length; i++){
+            if (data[i] == 1){
+                var y = Math.floor(i/canvas.width);
+                var x = i % canvas.width;
+                game.birthCell(x,y);
+            }
+            }
+            
+
+            paused = false;
+            
+
+            // game loop
+            var loop = setInterval(gameLoop, 1000/FPS);
+        }
+
+
+        
+
+        // Game loop, draw to screen and then iterate the game
+        function gameLoop(){
+            console.log("HERE")
+            draw();
+            if (!paused){
+                game.nextIteration();
+            }
+        }
+
+        // fills the canvas in black
+        function fillBlack(){
+            ctx.fillStyle = "black";
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+        }
+
+        // draw the current state of the game
+        function draw(){
+            fillBlack();
+            ctx.fillStyle = "white";
+
+            var cellWidth = Math.floor(canvas.width / game.width);
+            var cellHeight = Math.floor(canvas.height / game.height);
+            
+            for (var row = 0; row < game.height; row++){
+                for (var col = 0; col < game.width; col++){
+                    if (game.getCell(row,col) == 1){
+                        ctx.fillRect(col*cellWidth+1, row*cellHeight+1, cellWidth-2, cellHeight-2);
+                    }
+                }
+            }
+        }
+
+    </script>
