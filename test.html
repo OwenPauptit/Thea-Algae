@@ -1,18 +1,26 @@
 <body>
-    <input type="file" id="file-selector">
+    <div style="display: inline-block;">
+        <input type="file" id="file-selector">
+        <label>FPS for next image:</label>
+        <input type="range" id="fps-selector" min="0.5" max="20" step="0.5" value="1">
+    </div>
+
     <p id="status"></p>
     
     <div style="display: inline-block">
 
-        <canvas id="picture" width="433" height="433"></canvas>
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas" style="margin-bottom: 1%"></canvas>
+        <canvas id="picture" style="margin-bottom: 1%"></canvas>
     </div>
 </body>
 
 <script src="GameOfLifeGrid.js"></script>
 <script>
     
+    const MAXWIDTH = Math.floor(window.innerWidth / 2.1);
+
     const status = document.getElementById('status');
+    var loop;
     const picture = document.getElementById("picture");
     const picturectx = picture.getContext("2d");
     const canvas = document.getElementById("canvas");
@@ -20,10 +28,10 @@
       const output = new Image();
       output.onload = () => {
         
-        picture.width = output.width;
-        picture.height = output.height;
-        canvas.width = output.width;
-        canvas.height = output.height;
+        picture.width = Math.min(MAXWIDTH, output.width);
+        picture.height = Math.floor((output.height / output.width) * picture.width);
+        canvas.width = Math.min(MAXWIDTH, output.width);
+        canvas.height = Math.floor((output.height / output.width) * canvas.width);
         picturectx.drawImage(output,0,0);
         ctx.drawImage(output,0,0);
         generateGame();
@@ -43,7 +51,9 @@
           }
           const reader = new FileReader();
           reader.addEventListener('load', event => {
+            //document.getElementById("file-selector").style.visibility = "hidden";
             output.src = event.target.result;
+
           });
           reader.readAsDataURL(file);
         }); 
@@ -52,10 +62,22 @@
       generateGame = function(){
         const pixel = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = pixel.data;
+
+        var scale = 1;
+        // if (canvas.width > MAXWIDTH || canvas.height > MAXHEIGHT){
+        //     scale = Math.max(canvas.width / MAXWIDTH, canvas.height/MAXHEIGHT);
+        //     scale = Math.floor(scale);
+        // }
+        // if (scale > 1){
+        //     canvas.width = canvas.width / scale;
+        //     canvas.height = canvas.height / scale;
+        // }
+        // console.log("SCALE", scale);
+
         console.log("ORIGINAL DATA");
         console.log(data);
         const newdata = [];
-        for(var i = 0; i < data.length; i+=4){
+        for(var i = 0; i < data.length; i+=4*scale){
             if(data[i] + data[i+1] + data[i+2] > 300){
                 newdata.push(1);
             } else{
@@ -102,7 +124,9 @@ startGame = function(data){
     
 
     // game loop
-    var loop = setInterval(gameLoop, 1000/FPS);
+    clearInterval(loop);
+    FPS = document.getElementById("fps-selector").value;
+    loop = setInterval(gameLoop, 1000/FPS);
 }
 
 

@@ -83,6 +83,10 @@ class GameOfLifeGrid {
         var notAtLeft = col > 0;
         var notAtRight = col < this.width - 1;
 
+        if (!(notAtTop && notAtBottom && notAtLeft && notAtRight)){
+            return 0;
+        }
+
         if (notAtTop){
             if (notAtLeft){
                 numberOfAliveNeighbours += this.grid[row-1][col-1]; // check above and to the left
