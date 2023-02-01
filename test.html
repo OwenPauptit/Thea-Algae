@@ -32,8 +32,8 @@
         picture.height = Math.floor((output.height / output.width) * picture.width);
         canvas.width = Math.min(MAXWIDTH, output.width);
         canvas.height = Math.floor((output.height / output.width) * canvas.width);
-        picturectx.drawImage(output,0,0);
-        ctx.drawImage(output,0,0);
+        picturectx.drawImage(output,0,0, picture.width, picture.height);
+        ctx.drawImage(output,0,0, canvas.width, canvas.height);
         generateGame();
       };
       if (window.FileList && window.File && window.FileReader) {
