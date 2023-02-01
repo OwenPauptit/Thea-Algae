@@ -1,0 +1,142 @@
+<body>
+    <input type="file" id="file-selector">
+    <p id="status"></p>
+    
+    <div style="display: inline-block">
+
+        <canvas id="picture" width="433" height="433"></canvas>
+        <canvas id="canvas"></canvas>
+    </div>
+</body>
+
+<script src="GameOfLifeGrid.js"></script>
+<script>
+    
+    const status = document.getElementById('status');
+    const picture = document.getElementById("picture");
+    const picturectx = picture.getContext("2d");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+      const output = new Image();
+      output.onload = () => {
+        
+        picture.width = output.width;
+        picture.height = output.height;
+        canvas.width = output.width;
+        canvas.height = output.height;
+        picturectx.drawImage(output,0,0);
+        ctx.drawImage(output,0,0);
+        generateGame();
+      };
+      if (window.FileList && window.File && window.FileReader) {
+        document.getElementById('file-selector').addEventListener('change', event => {
+          output.src = '';
+          status.textContent = '';
+          const file = event.target.files[0];
+          if (!file.type) {
+            status.textContent = 'Error: The File.type property does not appear to be supported on this browser.';
+            return;
+          }
+          if (!file.type.match('image.*')) {
+            status.textContent = 'Error: The selected file does not appear to be an image.'
+            return;
+          }
+          const reader = new FileReader();
+          reader.addEventListener('load', event => {
+            output.src = event.target.result;
+          });
+          reader.readAsDataURL(file);
+        }); 
+      }
+
+      generateGame = function(){
+        const pixel = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = pixel.data;
+        console.log("ORIGINAL DATA");
+        console.log(data);
+        const newdata = [];
+        for(var i = 0; i < data.length; i+=4){
+            if(data[i] + data[i+1] + data[i+2] > 50){
+                newdata.push(1);
+            } else{
+                newdata.push(0);
+            }
+        }
+        console.log("NEWDATA");
+        console.log(newdata);
+        ctx.fillStyle="black";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "white";
+        for(var i = 0; i < newdata.length; i++){
+            if (newdata[i] == 1){
+                var y = Math.floor(i/canvas.width);
+                var x = i % canvas.width;
+                ctx.fillRect(x,y,1,1);
+            }
+        }
+        startGame(newdata);
+      }
+
+       // number of updates per second
+       FPS = 1;
+
+
+startGame = function(data){
+
+    game = new GameOfLifeGrid(canvas.width,canvas.height);
+
+    console.log("DATA")
+    console.log(data);
+    for(var i = 0; i < data.length; i++){
+    if (data[i] == 1){
+        var y = Math.floor(i/canvas.width);
+        var x = i % canvas.width;
+        game.birthCell(x,y);
+    }
+    }
+    console.log("GAME GRID");
+    console.log(game.grid);
+    
+
+    paused = false;
+    
+
+    // game loop
+    var loop = setInterval(gameLoop, 1000/FPS);
+}
+
+
+
+
+// Game loop, draw to screen and then iterate the game
+function gameLoop(){
+    //console.log(game.grid)
+    draw();
+    if (!paused){
+        game.nextIteration();
+    }
+}
+
+// fills the canvas in black
+function fillBlack(){
+    ctx.fillStyle = "black";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+// draw the current state of the game
+function draw(){
+    fillBlack();
+    ctx.fillStyle = "white";
+
+    
+    for (var row = 0; row < game.height; row++){
+        for (var col = 0; col < game.width; col++){
+            if (game.getCell(row,col) == 1){
+                ctx.fillRect(col, row, 1, 1);
+            }
+        }
+    }
+}
+
+    
+</script>
