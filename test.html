@@ -56,7 +56,7 @@
         console.log(data);
         const newdata = [];
         for(var i = 0; i < data.length; i+=4){
-            if(data[i] + data[i+1] + data[i+2] > 50){
+            if(data[i] + data[i+1] + data[i+2] > 300){
                 newdata.push(1);
             } else{
                 newdata.push(0);
@@ -91,7 +91,7 @@ startGame = function(data){
     if (data[i] == 1){
         var y = Math.floor(i/canvas.width);
         var x = i % canvas.width;
-        game.birthCell(x,y);
+        game.birthCell(y,x);
     }
     }
     console.log("GAME GRID");
