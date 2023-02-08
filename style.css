@@ -17,3 +17,15 @@ input[type=range] {
     margin-top:5%;
     margin-left: 5%;
 }
+
+#pause-btn {
+    font-size: xx-large;
+}
+
+
+p {
+    font-size: xx-large;
+    color: red;
+    margin: 0;
+    padding: 0;
+}

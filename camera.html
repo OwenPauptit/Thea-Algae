@@ -8,10 +8,13 @@
             <label>FPS for next image:</label>
             <input type="range" id="fps-selector" min="-1" max="5" step="0.25" value="0">
             <br/><br/>
-            <input type="file" id="file-selector">
+            <input type="file" id="file-selector">           
+            <p id="status"></p>
+            <br/>
+            <button id="pause-btn" onclick="pauseplay()">Pause / Play</button>
+            <br/><br/>
     </div>
 
-    <p id="status"></p>
     
     <div style="display: inline-block">
 
@@ -30,6 +33,7 @@
     const picture = document.getElementById("picture");
     const picturectx = picture.getContext("2d");
     const canvas = document.getElementById("canvas");
+    document.getElementById("pause-btn").style.visibility = "hidden";
     const ctx = canvas.getContext("2d");
       const output = new Image();
       output.onload = () => {
@@ -58,6 +62,7 @@
           const reader = new FileReader();
           reader.addEventListener('load', event => {
             //document.getElementById("file-selector").style.visibility = "hidden";
+            document.getElementById("pause-btn").style.visibility = "visible";
             output.src = event.target.result;
 
           });
@@ -136,7 +141,9 @@ startGame = function(data){
 }
 
 
-
+function pauseplay(){
+    paused = !paused;
+}
 
 // Game loop, draw to screen and then iterate the game
 function gameLoop(){
