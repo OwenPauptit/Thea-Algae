@@ -6,7 +6,7 @@
 <body>
     <div class="input-container">
             <label>FPS for next image:</label>
-            <input type="range" id="fps-selector" min="0.5" max="20" step="0.5" value="1">
+            <input type="range" id="fps-selector" min="-1" max="5" step="0.25" value="0">
             <br/><br/>
             <input type="file" id="file-selector">
     </div>
@@ -131,7 +131,7 @@ startGame = function(data){
 
     // game loop
     clearInterval(loop);
-    FPS = document.getElementById("fps-selector").value;
+    FPS = Math.pow(2,document.getElementById("fps-selector").value);
     loop = setInterval(gameLoop, 1000/FPS);
 }
 

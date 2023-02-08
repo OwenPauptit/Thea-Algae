@@ -1,11 +1,11 @@
 
 
 input[type=file] {
-    font-size: x-large;
+    font-size: xx-large;
 }
 
 input[type=range] {
-    font-size: x-large;
+    font-size: xx-large;
     width:40%;
   }
 
