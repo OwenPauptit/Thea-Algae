@@ -9,11 +9,9 @@ input[type=range] {
     width:40%;
   }
 
-
-  #pause-btn {
+#pause-btn {
     font-size: xx-large;
 }
-
 
 p {
     font-size: xx-large;
