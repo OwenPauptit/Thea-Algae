@@ -1,0 +1,19 @@
+
+
+input[type=file] {
+    font-size: x-large;
+}
+
+input[type=range] {
+    font-size: x-large;
+    width:20%;
+  }
+
+
+.input-container {
+    font-size: xx-large;
+    display: inline-block;
+    width: 90%;
+    margin-top:5%;
+    margin-left: 5%;
+}
