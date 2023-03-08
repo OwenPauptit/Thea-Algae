@@ -26,8 +26,11 @@
     
     <div style="display: inline-block">
 
-        <canvas id="canvas" style="margin-bottom: 1%"></canvas>
         <canvas id="picture" style="margin-bottom: 1%"></canvas>
+        <canvas id="picture2" style="margin-bottom: 1%"></canvas>
+        <br/><br/>
+        
+        <canvas id="canvas" style="margin-bottom: 1%"></canvas>
     </div>
 
 </body>
@@ -42,6 +45,8 @@
     var loop;
     const picture = document.getElementById("picture");
     const picturectx = picture.getContext("2d");
+    const picture2 = document.getElementById("picture2");
+    const picture2ctx = picture2.getContext("2d");
     const canvas = document.getElementById("canvas");
     document.getElementById("pause-btn").style.visibility = "hidden";
     const ctx = canvas.getContext("2d");
@@ -50,10 +55,13 @@
         
         picture.width = Math.min(MAXWIDTH, output.width);
         picture.height = Math.floor((output.height / output.width) * picture.width);
+        picture2.width = picture.width;
+        picture2.height = picture.height;
         canvas.width = document.getElementById("width-selector").value;
         canvas.height = Math.floor((output.height / output.width) * canvas.width);
         NUMPIXELSHEIGHT = canvas.height;
         picturectx.drawImage(output,0,0, picture.width, picture.height);
+        picture2ctx.drawImage(output,0,0, picture2.width, picture2.height);
         ctx.drawImage(output,0,0, canvas.width, canvas.height);
         generateGame();
       };
